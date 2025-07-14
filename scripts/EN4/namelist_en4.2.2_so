@@ -1,0 +1,77 @@
+!! -------------------
+!! Namelist for SOSIE
+!! -------------------
+!!
+!! 3D interpolation from regular lat-lon to ORCA grid
+!! #########
+!!
+!!
+&ndom_src
+csource    = 'EN.4.2.2_360x173L42'
+ivect      = 0      ! this is not a vector interpolation
+l_reg_src  = .true. ! input grid is regular (lon and lat are "1D")
+cf_src     = 'TTAARRGGEETT_FILE'
+cv_src     = 'TTAARRGGEETT_VAR'
+cv_t_src   = 'time'
+cf_x_src   = 'TTAARRGGEETT_FILE'
+cv_lon_src = 'lon'
+cv_lat_src = 'lat'
+cf_lsm_src = 'missing_value'   ! we use 'missing_value' of input field to determine
+cv_lsm_src = ''                ! the land-sea-mask
+ewper_src  = 0          ! input field does have east-west periodicity with 0 overlapping point
+!!
+!! Only required if 3D interpolation (jplev==0):
+cf_z_src  = 'TTAARRGGEETT_FILE'
+cv_z_src  = 'lev'
+ctype_z_src = 'z'
+/
+!!
+!!
+&ndom_trg
+ctarget    = 'TTAARRGGEETT_GRID'
+l_reg_trg  = .false.
+cf_x_trg   = 'TTAARRGGEETT_MESHMASK'
+cv_lon_trg = 'nav_lon'
+cv_lat_trg = 'nav_lat'
+cf_lsm_trg = 'TTAARRGGEETT_MESHMASK'
+cv_lsm_trg = 'tmask'
+ewper_trg  = 2
+!!
+!! Only required if 3D interpolation (jplev==0):
+cf_z_trg = 'TTAARRGGEETT_MESHMASK'
+cv_z_trg = 'nav_lev'
+ctype_z_trg = 'z'
+/
+!!
+!!
+&ninterp
+cmethod     = 'akima'  ! 'bilin' 
+!!
+idrown      = 100,50   ! propagate sea values 100 grid cells into land and smooth 50 "times"
+! ixtrpl_bot = 1
+l_save_drwn = .true.
+ismooth     = 0
+jt1         = 0    ! we want to interpolate each time record
+jt2         = 0
+jplev       = 0  ! we want 3D interpolation
+vmax        =  1.E6
+vmin        = -1.E6
+ismooth_out = 0
+/
+!!
+!!
+&noutput
+cv_out    = 'OOUUTT_VAR'
+cu_out    = ''
+cln_out   = 'Salinity, EN.4.2.2'
+cv_t_out  = 'time_counter'
+cd_out    = '.'
+cextra    = 'OOUUTT_EXTRA'
+lmout     = .true.      ! .true. We want to mask continents!
+rmiss_val = -9999.
+lct       = .false.      ! we use time vector from input file
+t0        = 0.
+t_stp     = 0.
+cv_z_out  = 'depth'
+/
+!!
