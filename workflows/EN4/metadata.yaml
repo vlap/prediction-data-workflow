@@ -1,0 +1,37 @@
+name: interpolate_en4_to_orca
+
+description: Interpolate EN4.2.2 dataset to ORCA1 grid for ocean models.
+version: 1.0.0
+status: 🟡 Needs verification
+
+environment:
+  hpc: mn5
+
+inputs:
+  - name: input_dir
+    description: Directory containing EN4.2.2 NetCDF files.
+    type: directory
+    required: true
+    default: "/data/en4/"
+  - name: grid_file
+    description: Path to ORCA1 grid file.
+    type: file
+    required: true
+    default: "/grids/ORCA1_grid.nc"
+
+outputs:
+  - name: interpolated_files
+    description: Interpolated NetCDF files for ORCA1 grid.
+    type: file
+    pattern: "en4.2.2_*_ORCA1.nc"
+
+dependencies:
+  modules:
+    - nco/4.9.3
+    - cdo/1.9.8
+
+validation:
+  smoke_test: tests/interpolate_en4_to_orca_smoke.sh
+
+owner: climate_group
+last_verified: 2026-09-19

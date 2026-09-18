@@ -1,0 +1,42 @@
+# MareNostrum5 Infrastructure Manifest
+
+## Module Versions
+modules:
+  hpc:
+    name: mn5
+    updated: 2026-09-19
+  python:
+    current: "3.12"
+    available:
+      - "3.10"
+      - "3.12"
+  netcdf:
+    current: "4.9.3"
+    available:
+      - "4.7.4"
+      - "4.9.3"
+  nco:
+    current: "4.9.3"
+    available:
+      - "4.9.3"
+  cdo:
+    current: "1.9.8"
+    available:
+      - "1.9.8"
+  R:
+    current: "4.1.2"
+    available:
+      - "4.1.2"
+      - "4.3.0"
+
+## EC-Earth Versions
+model:
+  ec_earth:
+    versions:
+      - "3.3"
+      - "3.4"
+    default: "3.4"
+
+## Filesystem Paths
+hpc:
+  scratch: "/scratch/"

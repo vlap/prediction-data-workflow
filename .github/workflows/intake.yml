@@ -1,0 +1,52 @@
+name: Intake Agent
+
+on:
+  push:
+    paths:
+      - 'workflows/**/scripts/*'
+  workflow_dispatch:
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Antigravity CLI
+        run: pip install antigravity-cli
+
+      - name: Run Intake Agent
+        run: |
+          # Extract changed scripts
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep 'workflows/.*/scripts/')
+          for file in $CHANGED_FILES; do
+            dir=$(dirname "$file")
+            workflow_name=$(basename "$dir")
+            
+            # Generate metadata.yaml, docs, and tests
+            agy intake \
+              --script "$file" \
+              --output-dir "$dir" \
+              --docs-dir "docs/_workflows" \
+              --test-dir "tests"
+          done
+
+      - name: Create Draft PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore(intake): generate docs and metadata for updated scripts"
+          title: "chore(intake): onboard ${{ github.ref_name }}"
+          body: "Auto-generated docs, metadata, and tests for updated scripts."
+          branch: "intake/${{ github.ref_name }}"
+          draft: true
