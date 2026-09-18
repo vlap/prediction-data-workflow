@@ -5,6 +5,11 @@ on:
     paths:
       - 'workflows/**/scripts/*'
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Run in debug mode'
+        required: false
+        default: 'false'
 
 jobs:
   intake:
