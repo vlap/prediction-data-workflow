@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: '0 0 * * 1'  # Weekly
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Run in debug mode'
+        required: false
+        default: 'false'
 
 jobs:
   validate:
@@ -15,16 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y shellcheck
-          pip install antigravity-cli
 
       - name: Run ShellCheck
         run: |
